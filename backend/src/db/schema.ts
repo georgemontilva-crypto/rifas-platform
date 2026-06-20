@@ -114,6 +114,9 @@ export const tickets = mysqlTable(
       .default("available")
       .notNull(),
     userId: varchar("user_id", { length: 36 }),
+    // Token aleatorio que identifica al comprador invitado (sin cuenta) que
+    // hizo la reserva, para poder confirmarla/liberarla sin login.
+    reservationToken: varchar("reservation_token", { length: 64 }),
     reservedAt: timestamp("reserved_at"),
     // Reservas expiran solas: liberación automática vía cron
     reservationExpiresAt: timestamp("reservation_expires_at"),
@@ -138,7 +141,16 @@ export const payments = mysqlTable(
   "payments",
   {
     id: varchar("id", { length: 36 }).primaryKey(),
-    userId: varchar("user_id", { length: 36 }).notNull(),
+    // userId queda null para compradores invitados (sin cuenta), que es el
+    // flujo principal ahora. Si en el futuro el comprador inicia sesión,
+    // se puede asociar.
+    userId: varchar("user_id", { length: 36 }),
+    guestName: varchar("guest_name", { length: 150 }),
+    guestPhone: varchar("guest_phone", { length: 30 }),
+    guestEmail: varchar("guest_email", { length: 255 }),
+    // Código público para que el comprador invitado consulte/pague su
+    // ticket sin necesidad de cuenta (vía /ticket/:code)
+    ticketCode: varchar("ticket_code", { length: 40 }),
     raffleId: varchar("raffle_id", { length: 36 }).notNull(),
     ticketCount: int("ticket_count").notNull(),
     amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
@@ -171,6 +183,7 @@ export const payments = mysqlTable(
     idempotencyIdx: uniqueIndex("payments_idempotency_idx").on(
       table.idempotencyKey
     ),
+    ticketCodeIdx: uniqueIndex("payments_ticket_code_idx").on(table.ticketCode),
     userIdx: index("payments_user_idx").on(table.userId),
     raffleIdx: index("payments_raffle_idx").on(table.raffleId),
   })

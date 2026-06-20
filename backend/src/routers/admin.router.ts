@@ -33,6 +33,32 @@ export const adminRouter = router({
     });
   }),
 
+  // Lista de participantes (pagos) de una rifa específica, con conteos por
+  // estado para el panel de administración (Apartado/Revisando/Pagado).
+  participants: adminProcedure
+    .input(z.object({ raffleId: z.string(), search: z.string().optional() }))
+    .query(async ({ input }) => {
+      const rows = await db.query.payments.findMany({
+        where: eq(payments.raffleId, input.raffleId),
+        orderBy: [desc(payments.createdAt)],
+        limit: 500,
+      });
+
+      const filtered = input.search
+        ? rows.filter((p) =>
+            (p.guestName || "").toLowerCase().includes(input.search!.toLowerCase())
+          )
+        : rows;
+
+      const counts = {
+        apartado: rows.filter((p) => p.status === "pending").length,
+        revisando: rows.filter((p) => p.status === "processing").length,
+        pagado: rows.filter((p) => p.status === "approved").length,
+      };
+
+      return { participants: filtered, counts };
+    }),
+
   auditLog: adminProcedure
     .input(z.object({ limit: z.number().min(1).max(200).default(50) }))
     .query(async ({ input }) => {

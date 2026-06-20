@@ -2,36 +2,39 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { router, protectedProcedure, adminProcedure } from "../trpc.js";
+import { router, publicProcedure, adminProcedure } from "../trpc.js";
 import { db } from "../db/index.js";
 import { payments, tickets, raffles, auditLogs } from "../db/schema.js";
 
+const guestInfoSchema = z.object({
+  guestName: z.string().min(2).max(150),
+  guestPhone: z.string().max(30).optional(),
+  guestEmail: z.string().email().max(255).optional().or(z.literal("")),
+});
+
 export const paymentRouter = router({
-  // Crea una orden de pago para boletos ya RESERVADOS por el usuario.
-  // idempotencyKey la genera el cliente (uuid) y la reenvía si reintenta
-  // la misma compra por timeout de red, evitando cobros duplicados.
-  create: protectedProcedure
+  // Crea una orden de pago para un comprador SIN CUENTA. Recibe el
+  // reservationToken devuelto por ticket.reserveNumbers para confirmar que
+  // esos boletos en verdad fueron reservados por quien está pagando.
+  // Genera un ticketCode público para que el comprador consulte su ticket
+  // digital después (/ticket/:code) sin necesidad de login.
+  createGuest: publicProcedure
     .input(
-      z.object({
+      guestInfoSchema.extend({
         raffleId: z.string(),
         ticketIds: z.array(z.string()).min(1).max(100),
+        reservationToken: z.string(),
         provider: z.enum(["stripe", "mercadopago", "paypal", "manual_transfer"]),
-        idempotencyKey: z.string().min(10).max(100),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      const existing = await db.query.payments.findFirst({
-        where: eq(payments.idempotencyKey, input.idempotencyKey),
-      });
-      if (existing) return existing; // reintento seguro: devuelve la orden ya creada
-
+    .mutation(async ({ input }) => {
       const raffle = await db.query.raffles.findFirst({ where: eq(raffles.id, input.raffleId) });
       if (!raffle) throw new TRPCError({ code: "NOT_FOUND" });
 
       const reserved = await db.query.tickets.findMany({
         where: and(
           inArray(tickets.id, input.ticketIds),
-          eq(tickets.userId, ctx.user.id),
+          eq(tickets.reservationToken, input.reservationToken),
           eq(tickets.status, "reserved")
         ),
       });
@@ -39,21 +42,25 @@ export const paymentRouter = router({
       if (reserved.length !== input.ticketIds.length) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Los boletos seleccionados ya no están reservados a tu nombre",
+          message: "Tu reserva expiró o ya no es válida, vuelve a elegir tus números",
         });
       }
 
       const amount = (Number(raffle.ticketPrice) * reserved.length).toFixed(2);
       const paymentId = nanoid();
+      const ticketCode = nanoid(20);
 
       await db.insert(payments).values({
         id: paymentId,
-        userId: ctx.user.id,
+        guestName: input.guestName,
+        guestPhone: input.guestPhone || null,
+        guestEmail: input.guestEmail || null,
+        ticketCode,
         raffleId: raffle.id,
         ticketCount: reserved.length,
         amount,
         provider: input.provider,
-        idempotencyKey: input.idempotencyKey,
+        idempotencyKey: nanoid(),
         status: input.provider === "manual_transfer" ? "pending" : "processing",
       });
 
@@ -62,16 +69,38 @@ export const paymentRouter = router({
         .set({ purchaseId: paymentId })
         .where(inArray(tickets.id, input.ticketIds));
 
-      return db.query.payments.findFirst({ where: eq(payments.id, paymentId) });
+      return { ticketCode, paymentId };
     }),
 
-  attachProof: protectedProcedure
-    .input(z.object({ paymentId: z.string(), proofUrl: z.string().url() }))
-    .mutation(async ({ input, ctx }) => {
+  // Consulta pública del ticket digital por código, sin necesidad de cuenta.
+  byCode: publicProcedure
+    .input(z.object({ ticketCode: z.string() }))
+    .query(async ({ input }) => {
+      const payment = await db.query.payments.findFirst({
+        where: eq(payments.ticketCode, input.ticketCode),
+      });
+      if (!payment) throw new TRPCError({ code: "NOT_FOUND", message: "Ticket no encontrado" });
+
+      const raffle = await db.query.raffles.findFirst({ where: eq(raffles.id, payment.raffleId) });
+      const ticketRows = await db.query.tickets.findMany({
+        where: eq(tickets.purchaseId, payment.id),
+      });
+
+      return {
+        payment,
+        raffle,
+        numbers: ticketRows.map((t) => t.number).sort((a, b) => a - b),
+      };
+    }),
+
+  // Adjunta el comprobante de pago usando el código público del ticket
+  attachProofByCode: publicProcedure
+    .input(z.object({ ticketCode: z.string(), proofUrl: z.string().url() }))
+    .mutation(async ({ input }) => {
       await db
         .update(payments)
-        .set({ proofUrl: input.proofUrl })
-        .where(and(eq(payments.id, input.paymentId), eq(payments.userId, ctx.user.id)));
+        .set({ proofUrl: input.proofUrl, status: "processing" })
+        .where(eq(payments.ticketCode, input.ticketCode));
       return { success: true };
     }),
 
@@ -113,10 +142,9 @@ export const paymentRouter = router({
 
       await db.update(payments).set({ status: "rejected" }).where(eq(payments.id, payment.id));
 
-      // Libera los boletos para que vuelvan a la venta
       await db
         .update(tickets)
-        .set({ status: "available", userId: null, purchaseId: null, reservedAt: null, reservationExpiresAt: null })
+        .set({ status: "available", purchaseId: null, reservationToken: null, reservedAt: null, reservationExpiresAt: null })
         .where(eq(tickets.purchaseId, payment.id));
 
       await db.insert(auditLogs).values({
@@ -130,8 +158,4 @@ export const paymentRouter = router({
 
       return { success: true };
     }),
-
-  myPayments: protectedProcedure.query(async ({ ctx }) => {
-    return db.query.payments.findMany({ where: eq(payments.userId, ctx.user.id) });
-  }),
 });
