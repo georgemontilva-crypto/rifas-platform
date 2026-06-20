@@ -2,16 +2,16 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { db } from "../db";
-import { users, refreshTokens, auditLogs } from "../db/schema";
+import { router, publicProcedure, protectedProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { users, refreshTokens, auditLogs } from "../db/schema.js";
 import {
   hashPassword,
   verifyPassword,
   signAccessToken,
   generateRefreshToken,
   hashRefreshToken,
-} from "../utils/auth";
+} from "../utils/auth.js";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;

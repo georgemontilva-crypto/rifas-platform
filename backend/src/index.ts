@@ -4,11 +4,11 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { appRouter } from "./routers";
-import { createContext } from "./context";
-import { authLimiter, ticketLimiter, generalLimiter } from "./middleware/rateLimit";
-import { webhookRouter } from "./routes/webhook.routes";
-import { startCronJobs } from "./utils/cron";
+import { appRouter } from "./routers/index.js";
+import { createContext } from "./context.js";
+import { authLimiter, ticketLimiter, generalLimiter } from "./middleware/rateLimit.js";
+import { webhookRouter } from "./routes/webhook.routes.js";
+import { startCronJobs } from "./utils/cron.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;

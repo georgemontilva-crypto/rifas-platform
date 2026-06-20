@@ -2,10 +2,10 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { router, publicProcedure, adminProcedure } from "../trpc";
-import { db } from "../db";
-import { raffles, tickets } from "../db/schema";
-import { generateCommit } from "../utils/verifiableDraw";
+import { router, publicProcedure, adminProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { raffles, tickets } from "../db/schema.js";
+import { generateCommit } from "../utils/verifiableDraw.js";
 
 const createRaffleSchema = z.object({
   title: z.string().min(3).max(200),

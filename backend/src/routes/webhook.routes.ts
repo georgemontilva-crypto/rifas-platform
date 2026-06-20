@@ -2,10 +2,12 @@ import { Router } from "express";
 import express from "express";
 import Stripe from "stripe";
 import { eq } from "drizzle-orm";
-import { db } from "../db";
-import { payments, tickets } from "../db/schema";
+import { db } from "../db/index.js";
+import { payments, tickets } from "../db/schema.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 export const webhookRouter = Router();
@@ -18,8 +20,8 @@ webhookRouter.post(
   express.raw({ type: "application/json" }),
   async (req, res) => {
     const signature = req.headers["stripe-signature"];
-    if (!signature || !webhookSecret) {
-      return res.status(400).send("Falta firma o secreto configurado");
+    if (!stripe || !signature || !webhookSecret) {
+      return res.status(400).send("Stripe no está configurado o falta la firma");
     }
 
     let event: Stripe.Event;

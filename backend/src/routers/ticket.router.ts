@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and, inArray, sql } from "drizzle-orm";
-import { router, protectedProcedure } from "../trpc";
-import { db } from "../db";
-import { tickets, raffles } from "../db/schema";
+import { router, protectedProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { tickets, raffles } from "../db/schema.js";
 
 const RESERVATION_MINUTES = 10;
 

@@ -2,9 +2,9 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { router, protectedProcedure, adminProcedure } from "../trpc";
-import { db } from "../db";
-import { payments, tickets, raffles, auditLogs } from "../db/schema";
+import { router, protectedProcedure, adminProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { payments, tickets, raffles, auditLogs } from "../db/schema.js";
 
 export const paymentRouter = router({
   // Crea una orden de pago para boletos ya RESERVADOS por el usuario.

@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { eq, desc, count } from "drizzle-orm";
-import { router, adminProcedure } from "../trpc";
-import { db } from "../db";
-import { users, raffles, payments, tickets, auditLogs } from "../db/schema";
+import { router, adminProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { users, raffles, payments, tickets, auditLogs } from "../db/schema.js";
 
 export const adminRouter = router({
   dashboard: adminProcedure.query(async () => {

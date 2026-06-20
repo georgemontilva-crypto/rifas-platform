@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and } from "drizzle-orm";
-import { router, publicProcedure, adminProcedure } from "../trpc";
-import { db } from "../db";
-import { raffles, tickets, auditLogs } from "../db/schema";
-import { computeWinningNumber, verifyCommit } from "../utils/verifiableDraw";
+import { router, publicProcedure, adminProcedure } from "../trpc.js";
+import { db } from "../db/index.js";
+import { raffles, tickets, auditLogs } from "../db/schema.js";
+import { computeWinningNumber, verifyCommit } from "../utils/verifiableDraw.js";
 
 export const drawRouter = router({
   // Cierra la rifa, revela el seed comprometido y calcula el ganador.

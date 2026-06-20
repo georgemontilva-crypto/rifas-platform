@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { verifyAccessToken } from "./utils/auth";
+import { verifyAccessToken } from "./utils/auth.js";
 
 export interface AuthUser {
   id: string;
