@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { eq, and, inArray, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { router, protectedProcedure } from "../trpc";
 import { db } from "../db";
 import { tickets, raffles } from "../db/schema";
