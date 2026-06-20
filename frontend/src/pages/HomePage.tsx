@@ -21,7 +21,7 @@ export default function HomePage() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {raffles?.map((raffle) => (
+        {raffles?.map((raffle: any) => (
           <Link to={`/rifa/${raffle.slug}`} key={raffle.id} className="card overflow-hidden hover:border-primary-600 transition-colors">
             {raffle.coverImageUrl && (
               <img src={raffle.coverImageUrl} alt={raffle.title} className="w-full h-44 object-cover" />

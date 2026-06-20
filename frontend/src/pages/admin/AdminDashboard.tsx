@@ -20,7 +20,7 @@ export default function AdminDashboard() {
 
       <h2 className="font-bold text-lg mb-3">Pagos pendientes de aprobación</h2>
       <div className="space-y-2">
-        {pending?.map((p) => (
+        {pending?.map((p: any) => (
           <div key={p.id} className="card p-4 flex justify-between items-center">
             <div className="text-sm">
               <p className="font-semibold">{p.ticketCount} boleto(s) · ${p.amount}</p>

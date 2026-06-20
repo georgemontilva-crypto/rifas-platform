@@ -11,12 +11,12 @@ export default function LoginPage() {
   const setSession = useAuthStore((s) => s.setSession);
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setSession(data.user, data.accessToken);
       toast.success("¡Bienvenido de nuevo!");
       navigate("/dashboard");
     },
-    onError: (err) => toast.error(err.message || "Credenciales inválidas"),
+    onError: (err: any) => toast.error(err.message || "Credenciales inválidas"),
   });
 
   return (

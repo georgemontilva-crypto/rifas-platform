@@ -12,7 +12,7 @@ export default function DashboardPage() {
         <h2 className="font-bold text-lg mb-3">Mis pagos</h2>
         {loadingPayments && <p className="text-gray-500 text-sm">Cargando...</p>}
         <div className="space-y-2">
-          {payments?.map((p) => (
+          {payments?.map((p: any) => (
             <div key={p.id} className="card p-4 flex justify-between items-center text-sm">
               <span>{p.ticketCount} boleto(s) · ${p.amount}</span>
               <StatusBadge status={p.status} />
@@ -26,7 +26,7 @@ export default function DashboardPage() {
         <h2 className="font-bold text-lg mb-3">Mis boletos confirmados</h2>
         {loadingTickets && <p className="text-gray-500 text-sm">Cargando...</p>}
         <div className="flex flex-wrap gap-2">
-          {tickets?.map((t) => (
+          {tickets?.map((t: any) => (
             <span key={t.id} className="px-3 py-1.5 rounded-lg bg-primary-600/20 text-primary-300 text-sm font-mono">
               #{t.number}
             </span>

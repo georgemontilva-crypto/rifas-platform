@@ -12,7 +12,7 @@ export default function RegisterPage() {
       toast.success("Cuenta creada. Ahora inicia sesión.");
       navigate("/login");
     },
-    onError: (err) => toast.error(err.message || "No fue posible crear la cuenta"),
+    onError: (err: any) => toast.error(err.message || "No fue posible crear la cuenta"),
   });
 
   return (

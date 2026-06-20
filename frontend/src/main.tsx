@@ -34,11 +34,10 @@ function SessionBootstrap() {
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
   const utils = trpc.useUtils();
   const refreshMutation = trpc.auth.refresh.useMutation();
-  const meQuery = trpc.auth.me.useQuery(undefined, { enabled: false });
 
   React.useEffect(() => {
     refreshMutation.mutate(undefined, {
-      onSuccess: async (data) => {
+      onSuccess: async (data: any) => {
         setAccessToken(data.accessToken);
         const me = await utils.auth.me.fetch();
         useAuthStore.getState().setSession(me, data.accessToken);
