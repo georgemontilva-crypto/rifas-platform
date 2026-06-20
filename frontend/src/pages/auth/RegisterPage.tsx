@@ -26,15 +26,15 @@ export default function RegisterPage() {
         className="card p-6 space-y-4"
       >
         <div>
-          <label className="text-sm text-gray-400 block mb-1">Nombre completo</label>
+          <label className="text-sm text-gray-500 block mb-1">Nombre completo</label>
           <input required value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="input-field" />
         </div>
         <div>
-          <label className="text-sm text-gray-400 block mb-1">Correo electrónico</label>
+          <label className="text-sm text-gray-500 block mb-1">Correo electrónico</label>
           <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input-field" />
         </div>
         <div>
-          <label className="text-sm text-gray-400 block mb-1">Contraseña</label>
+          <label className="text-sm text-gray-500 block mb-1">Contraseña</label>
           <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="input-field" />
           <p className="text-xs text-gray-500 mt-1">Mínimo 10 caracteres, con mayúscula, minúscula y número.</p>
         </div>
@@ -42,7 +42,7 @@ export default function RegisterPage() {
           {registerMutation.isPending ? "Creando..." : "Crear cuenta"}
         </button>
         <p className="text-sm text-gray-500 text-center">
-          ¿Ya tienes cuenta? <Link to="/login" className="text-primary-400">Inicia sesión</Link>
+          ¿Ya tienes cuenta? <Link to="/login" className="text-primary-600">Inicia sesión</Link>
         </p>
       </form>
     </div>

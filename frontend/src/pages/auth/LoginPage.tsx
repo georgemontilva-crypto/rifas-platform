@@ -30,18 +30,18 @@ export default function LoginPage() {
         className="card p-6 space-y-4"
       >
         <div>
-          <label className="text-sm text-gray-400 block mb-1">Correo electrónico</label>
+          <label className="text-sm text-gray-500 block mb-1">Correo electrónico</label>
           <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
         </div>
         <div>
-          <label className="text-sm text-gray-400 block mb-1">Contraseña</label>
+          <label className="text-sm text-gray-500 block mb-1">Contraseña</label>
           <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" />
         </div>
         <button type="submit" disabled={loginMutation.isPending} className="btn-primary w-full">
           {loginMutation.isPending ? "Entrando..." : "Entrar"}
         </button>
         <p className="text-sm text-gray-500 text-center">
-          ¿No tienes cuenta? <Link to="/registro" className="text-primary-400">Regístrate</Link>
+          ¿No tienes cuenta? <Link to="/registro" className="text-primary-600">Regístrate</Link>
         </p>
       </form>
     </div>

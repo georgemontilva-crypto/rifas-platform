@@ -8,7 +8,7 @@ export default function HomePage() {
     <div className="container mx-auto max-w-6xl px-4 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold mb-3">Rifas activas</h1>
-        <p className="text-gray-400">
+        <p className="text-gray-500">
           Cada sorteo se realiza con un número aleatorio verificable públicamente. Nadie, ni
           siquiera el operador, puede manipular el resultado.
         </p>
@@ -28,7 +28,7 @@ export default function HomePage() {
             )}
             <div className="p-5">
               <h3 className="font-bold text-lg mb-1">{raffle.title}</h3>
-              <p className="text-primary-400 font-semibold">${raffle.ticketPrice} / boleto</p>
+              <p className="text-primary-600 font-semibold">${raffle.ticketPrice} / boleto</p>
             </div>
           </Link>
         ))}

@@ -54,15 +54,15 @@ export default function RaffleDetailPage() {
         <img src={raffle.coverImageUrl} alt={raffle.title} className="w-full h-56 sm:h-72 object-cover rounded-2xl mb-6" />
       )}
       <h1 className="text-2xl sm:text-3xl font-extrabold mb-2">{raffle.title}</h1>
-      <p className="text-gray-400 mb-6 whitespace-pre-line">{raffle.description}</p>
+      <p className="text-gray-500 mb-6 whitespace-pre-line">{raffle.description}</p>
 
       {/* Barra de progreso con porcentaje, estilo Rifary */}
       <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-400 mb-1">
+        <div className="flex justify-between text-sm text-gray-500 mb-1">
           <span>{progress}% vendido</span>
           <span>{soldCount} / {raffle.totalTickets}</span>
         </div>
-        <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+        <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
           <div className="h-full bg-primary-500 transition-all" style={{ width: `${progress}%` }} />
         </div>
       </div>
@@ -74,7 +74,7 @@ export default function RaffleDetailPage() {
             <h2 className="font-bold text-lg">¡Escoge tus números!</h2>
             <button
               onClick={() => setShowRandomModal(true)}
-              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-primary-600/20 text-primary-300 hover:bg-primary-600/30"
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-primary-50 text-primary-700 hover:bg-primary-100"
             >
               <Dice5 className="w-4 h-4" /> Seleccionar al azar
             </button>
@@ -87,7 +87,7 @@ export default function RaffleDetailPage() {
                 key={i}
                 onClick={() => setSection(i)}
                 className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-semibold ${
-                  section === i ? "bg-primary-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                  section === i ? "bg-primary-600 text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-100"
                 }`}
               >
                 {i * PAGE_SIZE}-{Math.min((i + 1) * PAGE_SIZE, raffle.totalTickets)}
@@ -105,14 +105,14 @@ export default function RaffleDetailPage() {
                   key={n}
                   disabled={status !== "available"}
                   onClick={() => toggleNumber(n)}
-                  className={`py-2 rounded-lg text-xs font-mono font-semibold transition-colors ${
+                  className={`py-2 rounded-lg text-xs font-mono font-semibold transition-colors border ${
                     status === "sold"
-                      ? "bg-gray-800/40 text-gray-600 cursor-not-allowed"
+                      ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
                       : status === "reserved"
-                      ? "bg-yellow-900/30 text-yellow-700 cursor-not-allowed"
+                      ? "bg-amber-50 text-amber-600 border-amber-200 cursor-not-allowed"
                       : isSelected
-                      ? "bg-primary-600 text-white"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                      ? "bg-primary-600 text-white border-primary-600"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-primary-400 hover:bg-primary-50"
                   }`}
                 >
                   {padded}
@@ -124,13 +124,13 @@ export default function RaffleDetailPage() {
 
         {/* Resumen / checkout lateral */}
         <div className="card p-5 h-fit lg:sticky lg:top-20">
-          <p className="text-2xl font-bold text-primary-400 mb-1">${raffle.ticketPrice}</p>
+          <p className="text-2xl font-bold text-primary-600 mb-1">${raffle.ticketPrice}</p>
           <p className="text-sm text-gray-500 mb-4">por boleto</p>
 
-          <p className="text-sm text-gray-400 mb-2">{selected.length} número(s) seleccionados</p>
+          <p className="text-sm text-gray-500 mb-2">{selected.length} número(s) seleccionados</p>
           <div className="flex flex-wrap gap-1.5 mb-4 max-h-32 overflow-y-auto">
             {selected.map((n) => (
-              <span key={n} className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary-600/20 text-primary-300 text-xs font-mono">
+              <span key={n} className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary-50 text-primary-700 text-xs font-mono">
                 {n}
                 <X className="w-3 h-3 cursor-pointer" onClick={() => toggleNumber(n)} />
               </span>
@@ -166,31 +166,31 @@ export default function RaffleDetailPage() {
 
       {/* Modal: checkout sin cuenta */}
       {showCheckout && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50 p-4">
           <div className="card p-6 max-w-sm w-full">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-lg">Participar</h3>
-              <X className="w-5 h-5 cursor-pointer text-gray-400" onClick={() => setShowCheckout(false)} />
+              <X className="w-5 h-5 cursor-pointer text-gray-500" onClick={() => setShowCheckout(false)} />
             </div>
-            <p className="text-primary-400 font-mono text-sm mb-4">
+            <p className="text-primary-600 font-mono text-sm mb-4">
               {selected.map((n) => `#${n}`).join("  ")}
             </p>
             <div className="space-y-3 mb-4">
               <div>
-                <label className="text-sm text-gray-400 block mb-1">Nombre</label>
+                <label className="text-sm text-gray-500 block mb-1">Nombre</label>
                 <input value={guestName} onChange={(e) => setGuestName(e.target.value)} className="input-field" placeholder="Tu nombre" />
               </div>
               <div>
-                <label className="text-sm text-gray-400 block mb-1">Teléfono (opcional)</label>
+                <label className="text-sm text-gray-500 block mb-1">Teléfono (opcional)</label>
                 <input value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} className="input-field" placeholder="Teléfono de contacto" />
               </div>
               <div>
-                <label className="text-sm text-gray-400 block mb-1">Email (opcional)</label>
+                <label className="text-sm text-gray-500 block mb-1">Email (opcional)</label>
                 <input value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} className="input-field" placeholder="Para enviarte el ticket" />
               </div>
             </div>
-            <p className="text-sm text-gray-400 mb-4">
-              Total: <span className="font-bold text-white">${(selected.length * Number(raffle.ticketPrice)).toFixed(2)}</span> ({selected.length} número(s))
+            <p className="text-sm text-gray-500 mb-4">
+              Total: <span className="font-bold text-gray-900">${(selected.length * Number(raffle.ticketPrice)).toFixed(2)}</span> ({selected.length} número(s))
             </p>
             <button
               disabled={!guestName || reserveMutation.isPending || createGuestMutation.isPending}
@@ -248,11 +248,11 @@ function RandomModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50 p-4">
       <div className="card p-6 max-w-sm w-full">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-bold text-lg">Seleccionar números</h3>
-          <X className="w-5 h-5 cursor-pointer text-gray-400" onClick={onClose} />
+          <X className="w-5 h-5 cursor-pointer text-gray-500" onClick={onClose} />
         </div>
         <div className="grid grid-cols-3 gap-2 mb-4">
           {[1, 2, 3].map((qty) => (
@@ -269,10 +269,10 @@ function RandomModal({
 
         {picked.length > 0 && (
           <>
-            <p className="text-sm text-gray-400 mb-2">{picked.length} número(s) seleccionados</p>
+            <p className="text-sm text-gray-500 mb-2">{picked.length} número(s) seleccionados</p>
             <div className="flex flex-wrap gap-1.5 mb-3 max-h-24 overflow-y-auto">
               {picked.map((n) => (
-                <span key={n} className="px-2 py-1 rounded-md bg-primary-600/20 text-primary-300 text-xs font-mono">{n}</span>
+                <span key={n} className="px-2 py-1 rounded-md bg-primary-50 text-primary-700 text-xs font-mono">{n}</span>
               ))}
             </div>
             <p className="text-right font-bold mb-4">Total: ${(picked.length * ticketPrice).toFixed(2)}</p>

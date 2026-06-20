@@ -8,7 +8,7 @@ const statusLabels: Record<string, { label: string; color: string }> = {
   processing: { label: "Revisando", color: "bg-yellow-600/20 text-yellow-400" },
   approved: { label: "Pagado", color: "bg-green-600/20 text-green-400" },
   rejected: { label: "Rechazado", color: "bg-red-600/20 text-red-400" },
-  refunded: { label: "Reembolsado", color: "bg-gray-600/20 text-gray-400" },
+  refunded: { label: "Reembolsado", color: "bg-gray-600/20 text-gray-500" },
 };
 
 export default function AdminDashboard() {
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
       <h2 className="font-bold text-lg mb-3">Participantes</h2>
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-900/60 text-gray-400 text-left">
+          <thead className="bg-gray-50 text-gray-500 text-left">
             <tr>
               <th className="px-4 py-3">Nombre</th>
               <th className="px-4 py-3">Boletos</th>
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
             {participantsData?.participants.map((p: any) => {
               const status = statusLabels[p.status] ?? statusLabels.pending;
               return (
-                <tr key={p.id} className="border-t border-gray-800">
+                <tr key={p.id} className="border-t border-gray-200">
                   <td className="px-4 py-3">{p.guestName || "—"}</td>
                   <td className="px-4 py-3">{p.ticketCount}</td>
                   <td className="px-4 py-3">
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
 function StatCard({ label, value }: { label: string; value?: number }) {
   return (
     <div className="card p-4 text-center">
-      <p className="text-2xl font-extrabold text-primary-400">{value ?? "—"}</p>
+      <p className="text-2xl font-extrabold text-primary-600">{value ?? "—"}</p>
       <p className="text-xs text-gray-500 mt-1">{label}</p>
     </div>
   );

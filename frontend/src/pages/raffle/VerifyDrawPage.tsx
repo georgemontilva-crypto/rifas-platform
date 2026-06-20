@@ -23,7 +23,7 @@ export default function VerifyDrawPage() {
         <h1 className="text-2xl font-extrabold">
           {allValid ? "Sorteo verificado correctamente" : "No se pudo verificar el sorteo"}
         </h1>
-        <p className="text-gray-400 mt-2 text-sm">
+        <p className="text-gray-500 mt-2 text-sm">
           Cualquier persona puede recalcular el resultado con los datos publicados abajo.
         </p>
       </div>
@@ -46,7 +46,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-gray-500 text-xs mb-1 font-sans">{label}</p>
-      <p className="text-gray-200">{value}</p>
+      <p className="text-gray-800">{value}</p>
     </div>
   );
 }

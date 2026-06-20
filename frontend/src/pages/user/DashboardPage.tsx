@@ -8,7 +8,7 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto max-w-md px-4 py-16">
       <h1 className="text-2xl font-extrabold mb-2 text-center">Buscar mi ticket</h1>
-      <p className="text-gray-400 text-sm text-center mb-6">
+      <p className="text-gray-500 text-sm text-center mb-6">
         Pega el código que te dieron al reservar tus números para ver el estado de tu participación.
       </p>
       <div className="card p-6 space-y-4">

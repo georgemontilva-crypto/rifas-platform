@@ -35,18 +35,18 @@ export default function TicketPage() {
           <h1 className="text-lg font-bold text-white">{raffle?.title}</h1>
         </div>
 
-        <div className="p-6 flex items-center gap-4 border-b border-gray-800">
+        <div className="p-6 flex items-center gap-4 border-b border-gray-200">
           <img src={qrUrl} alt="QR" className="rounded-lg bg-white p-1 w-24 h-24" />
           <div>
             <p className="text-xs text-gray-500 font-mono break-all">{code}</p>
             <p className="font-bold mt-1">{payment.guestName}</p>
-            <p className="text-primary-400 font-mono text-sm mt-1">
+            <p className="text-primary-600 font-mono text-sm mt-1">
               {numbers.map((n: number) => `#${n}`).join("  ")}
             </p>
           </div>
         </div>
 
-        <div className="p-6 text-center border-b border-gray-800">
+        <div className="p-6 text-center border-b border-gray-200">
           <span className={`px-4 py-1.5 rounded-full text-sm font-semibold text-white ${status.color}`}>
             {status.label}
           </span>
@@ -54,8 +54,8 @@ export default function TicketPage() {
 
         {payment.status === "pending" || payment.status === "processing" ? (
           <div className="p-6 space-y-3">
-            <p className="text-sm text-gray-400">
-              Realiza el pago de <span className="font-bold text-white">${payment.amount}</span> y sube tu comprobante para validar tu participación.
+            <p className="text-sm text-gray-500">
+              Realiza el pago de <span className="font-bold text-gray-900">${payment.amount}</span> y sube tu comprobante para validar tu participación.
             </p>
             <input
               value={proofUrl}
@@ -84,7 +84,7 @@ export default function TicketPage() {
 
       <p className="text-xs text-gray-500 text-center mt-4">
         Guarda este link, es tu comprobante de participación:{" "}
-        <span className="text-primary-400 break-all">{window.location.href}</span>
+        <span className="text-primary-600 break-all">{window.location.href}</span>
       </p>
     </div>
   );
